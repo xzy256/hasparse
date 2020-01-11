@@ -1,4 +1,6 @@
-package main
+package unmarshal
+
+import "hasparse/common"
 
 type HasTag struct {
 	TagNo    int
@@ -12,10 +14,10 @@ func NewHasTag(tag int) *HasTag {
 	}
 }
 
-func NewHasUniversalTag(tag UniversalTag) *HasTag {
+func NewHasUniversalTag(tag common.UniversalTag) *HasTag {
 	return &HasTag{
 		TagNo:    int(tag),
-		TagFlags: UNIVERSAL,
+		TagFlags: common.UNIVERSAL,
 	}
 }
 
@@ -27,15 +29,15 @@ func NewHasTagFlag(flag, tno int) *HasTag {
 }
 
 func NewAppTag(tagNo int) *HasTag {
-	return NewHasTagFlag(APPLICATION, tagNo)
+	return NewHasTagFlag(common.APPLICATION, tagNo)
 }
 
 func NewCtxTag(tagNo int) *HasTag {
-	return NewHasTagFlag(CONTEXT_SPECIFIC, tagNo)
+	return NewHasTagFlag(common.CONTEXT_SPECIFIC, tagNo)
 }
 
 func tagClass(tagFlags int) int {
-	tag := NewTagClass(tagFlags)
+	tag := common.NewTagClass(tagFlags)
 	return tag.TagClassFromTag()
 }
 
@@ -52,31 +54,31 @@ func (this *HasTag) IsPrimitive() bool {
 }
 
 func universalTag(tflag, tno int) int {
-	if tagClass(tflag) == UNIVERSAL {
-		return int(UniversalTagFromValue(tno))
+	if tagClass(tflag) == common.UNIVERSAL {
+		return int(common.UniversalTagFromValue(tno))
 	}
-	return int(UNKNOWN)
+	return int(common.UNKNOWN)
 }
 
 func (this *HasTag) IsEOC() bool {
-	return universalTag(this.TagFlags, this.TagNo) == int(EOC)
+	return universalTag(this.TagFlags, this.TagNo) == int(common.EOC)
 }
 
 func (this *HasTag) IsNull() bool {
-	return universalTag(this.TagFlags, this.TagNo) == int(NULL)
+	return universalTag(this.TagFlags, this.TagNo) == int(common.NULL)
 }
 
 func (this *HasTag) IsAppSpecific() bool {
-	return tagClass(this.TagFlags) == APPLICATION
+	return tagClass(this.TagFlags) == common.APPLICATION
 }
 
 func (this *HasTag) IsContextSpecific() bool {
-	return tagClass(this.TagFlags) == CONTEXT_SPECIFIC
+	return tagClass(this.TagFlags) == common.CONTEXT_SPECIFIC
 }
 
 func (this *HasTag) IsSpecific() bool {
 	tag := tagClass(this.TagFlags)
-	return tag == APPLICATION || tag == CONTEXT_SPECIFIC
+	return tag == common.APPLICATION || tag == common.CONTEXT_SPECIFIC
 }
 
 func (this *HasTag) TagByte() byte {

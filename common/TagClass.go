@@ -1,4 +1,4 @@
-package main
+package common
 
 const (
 	UNIVERSAL        = 0x00

@@ -1,4 +1,4 @@
-package main
+package unmarshal
 
 type Asn1Header struct {
 	Tag    HasTag

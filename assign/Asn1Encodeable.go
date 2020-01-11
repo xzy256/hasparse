@@ -1,36 +1,38 @@
-package main
+package assign
 
 import (
 	"bytes"
+	"hasparse/common"
+	"hasparse/unmarshal"
 	"log"
 )
 
 type Asn1Encodeable struct {
 	BodyLength      int // -1
 	OuterEncodeable *Asn1Encodeable
-	EncodingT       EncodingType // BER
-	IsImplct        bool         //true
-	IsDLength       bool         //true
-	Tag             *HasTag
+	EncodingT       common.EncodingType // BER
+	IsImplct        bool                //true
+	IsDLength       bool                //true
+	Tag             *unmarshal.HasTag
 }
 
-func NewAsn1Encodeable(tag *HasTag) *Asn1Encodeable {
+func NewAsn1Encodeable(tag *unmarshal.HasTag) *Asn1Encodeable {
 	return &Asn1Encodeable{
 		BodyLength: -1,
-		EncodingT:  BER,
+		EncodingT:  common.BER,
 		IsImplct:   true,
 		IsDLength:  true,
 		Tag:        tag,
 	}
 }
 
-func NewAsn1EncodeableInt(tag UniversalTag) *Asn1Encodeable {
+func NewAsn1EncodeableInt(tag common.UniversalTag) *Asn1Encodeable {
 	return &Asn1Encodeable{
 		BodyLength: -1,
-		EncodingT:  BER,
+		EncodingT:  common.BER,
 		IsImplct:   true,
 		IsDLength:  true,
-		Tag:        NewHasUniversalTag(tag),
+		Tag:        unmarshal.NewHasUniversalTag(tag),
 	}
 }
 
@@ -59,11 +61,11 @@ func (this *Asn1Encodeable) IsImplicit() bool {
 }
 
 func (this *Asn1Encodeable) UseBER() {
-	this.EncodingT = BER
+	this.EncodingT = common.BER
 }
 
 func (this *Asn1Encodeable) IsBER() bool {
-	return this.EncodingT == BER
+	return this.EncodingT == common.BER
 }
 
 func (this *Asn1Encodeable) DcodeBytes(context []byte) {
@@ -72,11 +74,11 @@ func (this *Asn1Encodeable) DcodeBytes(context []byte) {
 }
 
 func (this *Asn1Encodeable) DcodeBuffer(buffer bytes.Buffer) {
-	parseResult := Asn1ParserBuffer(buffer)
+	parseResult := unmarshal.Asn1ParserBuffer(buffer)
 	this.DcodeAsn1ParseResult(parseResult)
 }
 
-func (this *Asn1Encodeable) DcodeAsn1ParseResult(parseResult *Asn1ParseResult) {
+func (this *Asn1Encodeable) DcodeAsn1ParseResult(parseResult *unmarshal.Asn1ParseResult) {
 	//tmpParseResult := parseResult
 	tag1 := this.Tag
 	tag2 := parseResult.Tag
@@ -90,7 +92,7 @@ func (this *Asn1Encodeable) DcodeAsn1ParseResult(parseResult *Asn1ParseResult) {
 	//decodeBody(tmpParseResult)
 }
 
-func (this *Asn1Encodeable) TaggedDecode(parseResult Asn1ParseResult, taggingOption TaggingOption) {
+func (this *Asn1Encodeable) TaggedDecode(parseResult unmarshal.Asn1ParseResult, taggingOption TaggingOption) {
 	expectTaggingTagFlags := taggingOption.GetTag(!this.IsPrimitive())
 	//tmpParseResult := parseResult
 	if !expectTaggingTagFlags.Equal(&parseResult.Tag) {

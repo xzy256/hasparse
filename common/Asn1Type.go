@@ -1,6 +1,8 @@
-package main
+package common
 
-import "bytes"
+import (
+	"bytes"
+)
 
 type EncodingType int
 
@@ -19,6 +21,4 @@ type Asn1Type interface {
 	IsBER() bool
 	DcodeBytes(context []byte)
 	DcodeBuffer(buffer bytes.Buffer)
-	DcodeAsn1ParseResult(parseResult *Asn1ParseResult)
-	TaggedDecode(parseResult Asn1ParseResult, taggingOption TaggingOption)
 }

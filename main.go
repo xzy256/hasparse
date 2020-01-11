@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"hasparse/unmarshal"
 	"log"
 )
 
@@ -16,7 +17,6 @@ func main(){
 		log.Fatal(errors.New("request TGT failed, response->krbMessage decode fail by base64"))
 	}
 	buf := bytes.NewBuffer(krbMessage)
-	/*s1 := Asn1ParserBuffer(*buf)
-	fmt.Println(s1)*/
-	KrbDecodeMessage(*buf)
+	s1 := unmarshal.Asn1ParserBuffer(*buf)
+	fmt.Println(s1)
 }

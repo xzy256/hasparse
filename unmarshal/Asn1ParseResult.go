@@ -1,7 +1,8 @@
-package main
+package unmarshal
 
 import (
 	"bytes"
+	"hasparse/utils"
 )
 
 type Asn1ParseResult struct {
@@ -64,9 +65,9 @@ func (this *Asn1ParseResult) GetHeaderLength() int {
 		bodyLen = this.BodyEnd - this.BodyStart
 	}
 
-	headerLen := LengthOfTagLength(this.Header.Tag.TagNo)
+	headerLen := utils.LengthOfTagLength(this.Header.Tag.TagNo)
 	if this.Header.Length != -1 {
-		headerLen += LengthOfBodyLength(bodyLen)
+		headerLen += utils.LengthOfBodyLength(bodyLen)
 	} else {
 		headerLen += 1
 	}

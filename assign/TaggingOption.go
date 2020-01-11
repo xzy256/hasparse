@@ -1,4 +1,9 @@
-package main
+package assign
+
+import (
+	"hasparse/common"
+	"hasparse/unmarshal"
+)
 
 type TaggingOption struct {
 	TagNo         int
@@ -38,13 +43,13 @@ func NewExplicitContextSpecific(tagNo int) *TaggingOption {
 	}
 }
 
-func (this *TaggingOption) GetTag(isTaggedConstructed bool) *HasTag{
+func (this *TaggingOption) GetTag(isTaggedConstructed bool) *unmarshal.HasTag {
 	isConstructed := !this.IsImplicit || isTaggedConstructed
-	tag := CONTEXT_SPECIFIC
+	tag := common.CONTEXT_SPECIFIC
 	if this.IsAppSpecific {
-		tag = APPLICATION
+		tag = common.APPLICATION
 	}
-	tagClass := NewTagClass(tag)
+	tagClass := common.NewTagClass(tag)
 	flag := tagClass.TCValue
 	if isConstructed {
 		flag = flag | 0x20
@@ -52,7 +57,7 @@ func (this *TaggingOption) GetTag(isTaggedConstructed bool) *HasTag{
 		flag = flag | 0x00
 	}
 
-	return NewHasTagFlag(flag, this.TagNo)
+	return unmarshal.NewHasTagFlag(flag, this.TagNo)
 }
 
 
