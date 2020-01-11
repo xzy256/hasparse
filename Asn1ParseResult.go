@@ -86,5 +86,4 @@ func (this *Asn1ParseResult) GetEncodingLength() int {
 	headerLen := this.GetHeaderLength()
 	bodyLen := this.GetBodyLength()
 	return headerLen + bodyLen
-	//return this.GetHeaderLength() + this.GetBodyLength()
 }
