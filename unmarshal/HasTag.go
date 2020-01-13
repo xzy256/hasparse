@@ -102,3 +102,14 @@ func (this *HasTag) Equal (cmpTag *HasTag) bool {
 	}
 	return this.TagNo == cmpTag.TagNo
 }
+
+func (this *HasTag) IsNested() bool {
+	val := this.TagNo + this.TagFlags
+	val = val & 0x20
+	flag := val >> 5
+	if flag == 1 {
+		return true
+	}
+	return false
+}
+

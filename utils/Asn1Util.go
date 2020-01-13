@@ -1,6 +1,9 @@
 package utils
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"log"
+)
 
 func LengthOfTagLength(tagNo int) int {
 	length := 1
@@ -41,5 +44,13 @@ func IntToBytes(i int32) []byte {
 }
 
 func BytesToInt(buf []byte) int32 {
-	return int32(binary.BigEndian.Uint32(buf))
+	if len(buf) > 4 {
+		log.Fatal("Array out of bounds, 4 bytes for int32, your len:", len(buf))
+	}
+	length := len(buf)
+	tmpbytes := []byte{0, 0, 0, 0}
+	for i := 0; i < length; i++ {
+		tmpbytes[3-i] = buf[i]
+	}
+	return int32(binary.BigEndian.Uint32(tmpbytes))
 }

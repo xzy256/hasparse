@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"hasparse/assign"
 	"hasparse/unmarshal"
 	"log"
 )
@@ -18,5 +19,9 @@ func main(){
 	}
 	buf := bytes.NewBuffer(krbMessage)
 	s1 := unmarshal.Asn1ParserBuffer(*buf)
+	asRep := &assign.KdcRep{}
+	asRep.Init()
+	asRep.Decode(s1)
 	fmt.Println(s1)
+
 }

@@ -22,6 +22,10 @@ func (this *Asn1ParseResult) GetBodyBuffer() *bytes.Buffer {
 	return bytes.NewBuffer(this.Buf.Bytes()[this.BodyStart:])
 }
 
+func (this *Asn1ParseResult) GetIndex() int{
+	return this.index
+}
+
 func (this *Asn1ParseResult) GetElementByIndex(index int) *Asn1ParseResult {
 	return this.Children[index]
 }
