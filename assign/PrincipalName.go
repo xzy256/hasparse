@@ -5,14 +5,14 @@ const (
 	NAME_STRING int = 1
 )
 
+/*
+PrincipalName   ::= SEQUENCE {
+     name-type       [0] Int32,
+     name-string     [1] SEQUENCE OF KerberosString
+}
+*/
 type PrincipalName struct {
 	NameType   int
-	NameString *Asn1OctetString
-	filedInfo  []int
-	position   []byte
+	NameString string
 }
 
-func (this *PrincipalName) Init() {
-	this.position = []byte{4, 0, 0}
-	this.filedInfo = []int{NAME_TYPE, NAME_STRING}
-}

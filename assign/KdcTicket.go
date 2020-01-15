@@ -7,16 +7,22 @@ const (
 	TK_ENC_PART int = 3
 )
 
+/**
+Ticket          ::= [APPLICATION 1] SEQUENCE {
+	tkt-vno         [0] INTEGER (5),
+	realm           [1] Realm,
+	sname           [2] PrincipalName,
+	enc-part        [3] EncryptedData -- EncTicketPart
+}
+*/
 type KdcTicket struct {
 	Tktvno   int
-	Realm    *Asn1OctetString
+	Realm    string
 	Sname    *PrincipalName
 	EncPart  *EncryptedData
-	filedInfo []int
-	position []byte
 }
 
 func (this *KdcTicket) Init() {
-	this.position = []byte{5, 0, 0}
-	this.filedInfo = []int{TKT_VNO, REALM, SNAME, TK_ENC_PART}
+	this.Sname = &PrincipalName{}
+	this.EncPart = &EncryptedData{}
 }

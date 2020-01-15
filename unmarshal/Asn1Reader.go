@@ -35,9 +35,6 @@ func (this *Asn1Reader) GetByte() byte {
 
 func (this *Asn1Reader) ReadHeader() *Asn1Header {
 	tag := this.ReadTag()
-	if this.Position == 66 {
-		fmt.Println("=====", tag)
-	}
 	valueLength := this.ReadLength()
 	header := NewAsn1Header(*tag, valueLength)
 

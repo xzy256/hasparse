@@ -6,13 +6,9 @@ import (
 
 type Asn1OctetString struct {
 	ValueBytes []byte
-	filedInfo  []int
-	position   []byte
 }
 
 func (this *Asn1OctetString) Init(){
-	this.position = []byte{1, 0, 0}
-	this.filedInfo = []int{1}
 }
 
 func (this *Asn1OctetString)DecodeBody(parseResult *unmarshal.Asn1ParseResult) {
@@ -23,6 +19,10 @@ func (this *Asn1OctetString)DecodeBody(parseResult *unmarshal.Asn1ParseResult) {
 }
 
 func (this *Asn1OctetString)Value() string {
-	return string(this.ValueBytes)
+	if this != nil {
+		return string(this.ValueBytes)
+
+	}
+	return ""
 }
 

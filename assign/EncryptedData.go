@@ -6,15 +6,17 @@ const (
 	CIPHER int = 2
 )
 
-type EncryptedData struct {
-	Etype     int
-	Kvno      uint32 //optional
-	Cipher    *Asn1OctetString
-	filedInfo []int
-	position  []byte
+/*
+EncryptedData   ::= SEQUENCE {
+	etype   [0] Int32 -- EncryptionType --,
+	kvno    [1] UInt32 OPTIONAL,
+	cipher  [2] OCTET STRING -- ciphertext
 }
+*/
 
-func (this *EncryptedData) Init() {
-	this.position = []byte{6, 0, 0}
-	this.filedInfo = []int{ETYPE, KVNO, CIPHER}
+type EncryptedData struct {
+	Etype    int
+	Kvno     uint32 //optional
+	Cipher   *Asn1OctetString
+	Optional bool
 }

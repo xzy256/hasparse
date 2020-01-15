@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"container/list"
 	"encoding/binary"
 	"log"
 )
@@ -53,4 +54,15 @@ func BytesToInt(buf []byte) int32 {
 		tmpbytes[3-i] = buf[i]
 	}
 	return int32(binary.BigEndian.Uint32(tmpbytes))
+}
+
+
+func CopyListAfterRemoveHead(src *list.List) *list.List {
+	dst := list.New()
+	ele := src.Front()
+	src.Remove(ele)
+	for e := src.Front(); e != nil; e = e.Next() {
+		dst.PushBack(e.Value)
+	}
+	return dst
 }

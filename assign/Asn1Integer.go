@@ -7,13 +7,9 @@ import (
 
 type Asn1Integer struct {
 	ValueBytes []byte // multi bytes for int32
-	fileInfo   []int
-	position   []byte
 }
 
 func (this *Asn1Integer) Init() {
-	this.position = []byte{0, 0, 0}
-	this.fileInfo = []int{0}
 }
 
 func (this *Asn1Integer) DecodeBody(parseResult *unmarshal.Asn1ParseResult) {
@@ -24,5 +20,8 @@ func (this *Asn1Integer) DecodeBody(parseResult *unmarshal.Asn1ParseResult) {
 }
 
 func (this *Asn1Integer) Value() int32 {
+	if this == nil {
+		return 0
+	}
 	return utils.BytesToInt(this.ValueBytes)
 }

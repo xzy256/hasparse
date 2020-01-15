@@ -5,14 +5,14 @@ const (
 	PADATA_VALUE int = 2
 )
 
+/*
+PAData   		::= SEQUENCE {
+	-- NOTE: first tag is [1], not [0]
+	padata-type     [1] Int32,
+	padata-value    [2] OCTET STRING -- might be encoded AP-REQ
+}
+*/
 type PAData struct {
 	PadataType  int
 	PadataValue *Asn1OctetString
-	fileInfo   []int
-	position   []byte
-}
-
-func (this *PAData) Init() {
-	this.position = []byte{2, 0, 0}
-	this.fileInfo = []int{PADATA_TYPE, PADATA_VALUE}
 }
