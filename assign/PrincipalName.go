@@ -16,3 +16,6 @@ type PrincipalName struct {
 	NameString string
 }
 
+func (this *PrincipalName) MakeSalt(realm string) string {
+	return realm + this.NameString
+}

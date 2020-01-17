@@ -3,6 +3,7 @@ package utils
 import (
 	"container/list"
 	"encoding/binary"
+	"encoding/hex"
 	"log"
 )
 
@@ -65,4 +66,10 @@ func CopyListAfterRemoveHead(src *list.List) *list.List {
 		dst.PushBack(e.Value)
 	}
 	return dst
+}
+
+func IterationsToS2Kparams(i uint32) string {
+	b := make([]byte, 4, 4)
+	binary.BigEndian.PutUint32(b, i)
+	return hex.EncodeToString(b)
 }
