@@ -22,5 +22,6 @@ func main(){
 	asRep := &assign.KdcRep{}
 	asRep.Init()
 	asRep.Decode(s1)
+	assign.HandleKdcRep(asRep, "web_nlp4e36cd9bb66c3039aca29db66b38fcae")
 	asRep.Display()
 }
