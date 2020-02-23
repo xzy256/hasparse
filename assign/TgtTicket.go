@@ -1,46 +1,71 @@
 package assign
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"fmt"
+	"bytes"
 	"gopkg.in/jcmturner/gokrb5.v7/crypto"
-	krbcom "gopkg.in/jcmturner/gokrb5.v7/crypto/common"
 	"gopkg.in/jcmturner/gokrb5.v7/crypto/rfc3962"
-	"gopkg.in/jcmturner/gokrb5.v7/iana/keyusage"
-	"gopkg.in/jcmturner/gokrb5.v7/types"
+	"hasparse/unmarshal"
 	"hasparse/utils"
 )
 
 func HandleKdcRep(kdcRep *KdcRep, passPhrass string) {
-	//etype := EncryptionTypeFromValue(kdcRep.EncData.Etype)
-	//salt := kdcRep.Cname.MakeSalt(kdcRep.Crealm)
-	//clientKey := String2Key(passPhrass, salt, etype)
+	etype := EncryptionTypeFromValue(kdcRep.EncData.Etype)
+	salt := kdcRep.Cname.MakeSalt(kdcRep.Crealm)
+	clientKey := String2Key(passPhrass, salt, etype)
 
-	decryptWith(kdcRep)
+	decryptedData := decryptWith(kdcRep, clientKey.Keyvalue.ValueBytes)
+	if (decryptedData[0] & 0x1f) == 26 {
+		decryptedData[0] = decryptedData[0] - 1
+	}
 
-	//plainText := Decrypt(kdcRep.EncData.Cipher.ValueBytes, clientKey.Keyvalue.ValueBytes)
-	//fmt.Println("++++", plainText)
+	buf := bytes.NewBuffer(decryptedData)
+	s1 := unmarshal.Asn1ParserBuffer(*buf)
+	encKdcRp := EncKdcRepPart{}
+	encKdcRp.Construct()
+	DecodeBody(s1, encKdcRp)
+	kdcRep.EncPart = &encKdcRp
 }
 
-func decryptWith(kdcRep *KdcRep) {
-	constant := []byte{0,0,0,3,0} // 3-->AS_REP_ENCPART
+func decryptWith(kdcRep *KdcRep, clientKey []byte) []byte{
+	constant := []byte{0, 0, 0, 3, 0} // 3-->AS_REP_ENCPART
 	constant[4] = byte(0xaa)
 
-	ki := Selfnfold(constant, aes.BlockSize)
-	fmt.Println(ki)
+	//siv := Selfnfold(constant, aes.BlockSize)
 
-	u := krbcom.GetUsageKe(3)
-	fmt.Println(u)
+	encProvider := &Aes128Provider{}
+	encProvider.Construct()
 
-	key := &types.EncryptionKey{
-		KeyType:17,
-		KeyValue:ki,
+	ke := Dr(clientKey, constant, encProvider)
+	//constant[4] = byte(0x55)
+	//ki := Dr(clientKey, constant, encProvider) // for check
+
+	totalLen := len(kdcRep.EncData.Cipher.ValueBytes)
+	aes128 := Aes128Provider{}
+	confoundedLen := aes128.BlockSize()
+	checksumLen := aes128.ChecksumSize()
+	dataLen := totalLen - (confoundedLen + checksumLen)
+
+	//workLens := []int{confoundedLen, checksumLen, dataLen}
+	//fmt.Println(workLens)
+
+	// decrypt and verify checksum
+	//iv := make([]byte, encProvider.BlockSize())
+	tmpEnc := make([]byte, confoundedLen+ dataLen)
+	utils.ArrayCopy(kdcRep.EncData.Cipher.ValueBytes, 0, tmpEnc, 0, confoundedLen+ dataLen)
+	raw := false
+	if !raw {
+		checksum := make([]byte, checksumLen)
+		utils.ArrayCopy(kdcRep.EncData.Cipher.ValueBytes, confoundedLen+ dataLen, checksum, 0, checksumLen)
+		output := make([]byte, len(tmpEnc))
+		encProvider.Decrypt(ke, output, tmpEnc)
+
+		// todo checksum, now pass directly
+
+		utils.ArrayCopy(output, confoundedLen, tmpEnc, 0, dataLen)
+		return tmpEnc[:dataLen]
+	}else{  // reserved interface
+		return nil
 	}
-	plain, _ := Decrypt2(kdcRep, *key)
-	fmt.Println(plain)
-
-
 }
 
 func String2Key(passPhrase string, salt string, etype *EncryptionType) *EncryptionKey {
@@ -51,36 +76,4 @@ func String2Key(passPhrase string, salt string, etype *EncryptionType) *Encrypti
 		return nil
 	}
 	return NewEncryptionKey(etype, keyBytes)
-}
-
-func Decrypt(data []byte, key []byte) []byte {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		panic(err.Error())
-	}
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		panic(err.Error())
-	}
-	nonceSize := gcm.NonceSize()
-	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
-	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
-	if err != nil {
-		panic(err.Error())
-	}
-	return plaintext
-}
-
-func Decrypt2(kdcRep *KdcRep, key types.EncryptionKey) ([]byte, error) {
-	ticketD := &types.EncryptedData{
-		EType:int32(kdcRep.EncData.Etype),
-		KVNO: int(kdcRep.EncData.Kvno),
-		Cipher:kdcRep.EncData.Cipher.ValueBytes,
-	}
-	b, err := crypto.DecryptEncPart(*ticketD, key, keyusage.AS_REP_ENCPART)
-	if err != nil {
-		return nil, fmt.Errorf("error decrypting Ticket EncPart: %v", err)
-	}
-
-	return b, nil
 }

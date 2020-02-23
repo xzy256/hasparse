@@ -46,6 +46,7 @@ type KdcRep struct {
 	fieldInfos  []int
 	position    []byte // same as 0x532, 5-Ticket 3-Ticket.enc_part 2-Ticket.enc_part.cipher, default [255,255,255]
 	taggingList *list.List
+	EncPart     *EncKdcRepPart // data after decrypting
 }
 
 func (this *KdcRep) Init() {
@@ -92,10 +93,9 @@ func (this *KdcRep) UniversalDecode(parseResult *unmarshal.Asn1ParseResult, hasO
 			interger.DecodeBody(parseResult)
 			this.Padata.PadataType = int(interger.Value())
 		} else if kdcDirectChildPos == int(PADATA_VALUE) {
-			fmt.Println()
 		}
 	case int(CREALM):
-		octstring := &Asn1OctetString{}
+		octstring := &Asn1String{}
 		octstring.DecodeBody(parseResult)
 		this.Crealm = octstring.Value()
 	case int(CNAME):
@@ -104,7 +104,7 @@ func (this *KdcRep) UniversalDecode(parseResult *unmarshal.Asn1ParseResult, hasO
 			interger.DecodeBody(parseResult)
 			this.Cname.NameType = int(interger.Value())
 		} else if kdcDirectChildPos == int(NAME_STRING) {
-			octstring := &Asn1OctetString{}
+			octstring := &Asn1String{}
 			octstring.DecodeBody(parseResult)
 			this.Cname.NameString = octstring.Value()
 		} else {
@@ -117,7 +117,7 @@ func (this *KdcRep) UniversalDecode(parseResult *unmarshal.Asn1ParseResult, hasO
 			interger.DecodeBody(parseResult)
 			this.Ticket.Tktvno = int(interger.Value())
 		case REALM:
-			octstring := &Asn1OctetString{}
+			octstring := &Asn1String{}
 			octstring.DecodeBody(parseResult)
 			this.Ticket.Realm = octstring.Value()
 		case SNAME:
@@ -126,7 +126,7 @@ func (this *KdcRep) UniversalDecode(parseResult *unmarshal.Asn1ParseResult, hasO
 				interger.DecodeBody(parseResult)
 				this.Ticket.Sname.NameType = int(interger.Value())
 			} else if kdcGrandsonPos == int(NAME_STRING) {
-				octstring := &Asn1OctetString{}
+				octstring := &Asn1String{}
 				octstring.DecodeBody(parseResult)
 				this.Ticket.Sname.NameString = octstring.Value()
 			}
@@ -140,7 +140,7 @@ func (this *KdcRep) UniversalDecode(parseResult *unmarshal.Asn1ParseResult, hasO
 				interger.DecodeBody(parseResult)
 				this.Ticket.EncPart.Kvno = uint32(interger.Value())
 			} else if kdcGrandsonPos == int(CIPHER) {
-				octstring := &Asn1OctetString{}
+				octstring := &Asn1String{}
 				octstring.DecodeBody(parseResult)
 				this.Ticket.EncPart.Cipher = octstring
 			}
@@ -159,7 +159,7 @@ func (this *KdcRep) UniversalDecode(parseResult *unmarshal.Asn1ParseResult, hasO
 				interger.DecodeBody(parseResult)
 				this.EncData.Kvno = uint32(interger.Value())
 			} else if kdcDirectChildPos == int(CIPHER) {
-				octstring := &Asn1OctetString{}
+				octstring := &Asn1String{}
 				octstring.DecodeBody(parseResult)
 				this.EncData.Cipher = octstring
 			}

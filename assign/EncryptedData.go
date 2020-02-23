@@ -17,6 +17,6 @@ EncryptedData   ::= SEQUENCE {
 type EncryptedData struct {
 	Etype    int
 	Kvno     uint32 //optional
-	Cipher   *Asn1OctetString
+	Cipher   *Asn1String
 	Optional bool
 }

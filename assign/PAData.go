@@ -14,5 +14,5 @@ PAData   		::= SEQUENCE {
 */
 type PAData struct {
 	PadataType  int
-	PadataValue *Asn1OctetString
+	PadataValue *Asn1String
 }

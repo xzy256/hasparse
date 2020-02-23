@@ -45,18 +45,21 @@ func IntToBytes(i int32) []byte {
 	return buf
 }
 
-func BytesToInt(buf []byte) int32 {
+func BytesToInt(buf []byte, isBigEndian bool) int32 {
 	if len(buf) > 4 {
 		log.Fatal("Array out of bounds, 4 bytes for int32, your len:", len(buf))
 	}
 	length := len(buf)
 	tmpbytes := []byte{0, 0, 0, 0}
 	for i := 0; i < length; i++ {
-		tmpbytes[3-i] = buf[i]
+		if isBigEndian {
+			tmpbytes[i] = buf[i]
+		} else {
+			tmpbytes[3-i] = buf[i]
+		}
 	}
 	return int32(binary.BigEndian.Uint32(tmpbytes))
 }
-
 
 func CopyListAfterRemoveHead(src *list.List) *list.List {
 	dst := list.New()
@@ -72,4 +75,15 @@ func IterationsToS2Kparams(i uint32) string {
 	b := make([]byte, 4, 4)
 	binary.BigEndian.PutUint32(b, i)
 	return hex.EncodeToString(b)
+}
+
+func ArrayCopy(src []byte, srcPos int, dst []byte, dstPos int, length int) {
+	if length+srcPos-1 >= len(src) {
+		log.Fatal("Array copy out of range!")
+	}
+	index := dstPos
+	for i := srcPos; i < srcPos+length; i++ {
+		dst[index] = src[i]
+		index++
+	}
 }

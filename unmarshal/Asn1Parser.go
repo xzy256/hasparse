@@ -9,7 +9,6 @@ func Asn1ParserBuffer(buffer bytes.Buffer) *Asn1ParseResult {
 	return Asn1ParserReader(reader)
 }
 
-
 func Asn1ParserContainer(container *Asn1ParseResult) {
 	reader := NewAsn1Reader(container.Buf)
 	pos := container.BodyStart
@@ -35,7 +34,7 @@ func Asn1ParserContainer(container *Asn1ParseResult) {
 }
 
 func Asn1ParserReader(reader *Asn1Reader) *Asn1ParseResult {
-	if reader.Buffer.Len() >= reader.Buffer.Cap(){
+	if reader.Buffer.Len() > reader.Buffer.Cap() {
 		return nil
 	}
 	header := reader.ReadHeader()
@@ -45,8 +44,8 @@ func Asn1ParserReader(reader *Asn1Reader) *Asn1ParseResult {
 	var parseResult *Asn1ParseResult
 	conf := tmpTag.IsPrimitive()
 	if conf {
-		parseResult =  NewAsn1ParseResult(*header, bodyStart, reader.Buffer)
-	}else{
+		parseResult = NewAsn1ParseResult(*header, bodyStart, reader.Buffer)
+	} else {
 		parseResult = NewAsn1ParseResult(*header, bodyStart, reader.Buffer)
 		length := header.Length
 		if length != 0 {

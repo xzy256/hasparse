@@ -1,4 +1,4 @@
-package main
+package hasauth
 
 import (
 	"bufio"

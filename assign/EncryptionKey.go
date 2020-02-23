@@ -9,14 +9,14 @@ EncryptionKey   ::= SEQUENCE {
 
 type EncryptionKey struct {
 	Keytype  *EncryptionType
-	Keyvalue *Asn1OctetString
+	Keyvalue *Asn1String
 	Kvno     int
 }
 
 func NewEncryptionKey(keytype *EncryptionType, keyvalue []byte) *EncryptionKey {
 	return &EncryptionKey{
 		Keytype:  keytype,
-		Keyvalue: &Asn1OctetString{ValueBytes: keyvalue},
+		Keyvalue: &Asn1String{ValueBytes: keyvalue},
 		Kvno:     -1,
 	}
 }
