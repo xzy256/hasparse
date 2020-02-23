@@ -1,9 +1,11 @@
 package assign
 
 import (
+	"fmt"
 	"hasparse/unmarshal"
 	"log"
 	"strings"
+	"time"
 )
 
 type Asn1GeneralizedTime struct {
@@ -30,6 +32,21 @@ func (this *Asn1GeneralizedTime) DecodeBody(parseResult *unmarshal.Asn1ParseResu
 	if len(remainingBytes) > 0 {
 		this.ValueBytes = remainingBytes
 	}
+}
+
+func (this *Asn1GeneralizedTime) ParseGeneralizedTime(bytes []byte) (ret time.Time, err error) {
+	const formatStr = "20060102150405Z0700"
+	s := string(bytes)
+
+	if ret, err = time.Parse(formatStr, s); err != nil {
+		return
+	}
+
+	if serialized := ret.Format(formatStr); serialized != s {
+		err = fmt.Errorf("asn1: time did not serialize back to the original value and may be invalid: given %q, but serialized as %q", s, serialized)
+	}
+
+	return
 }
 
 func getMillSeconds(dateStr string) string {
