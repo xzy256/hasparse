@@ -1,4 +1,4 @@
-module hasparse
+module github.com/xzy256/hasparse
 
 require (
 	github.com/hashicorp/go-uuid v1.0.2
