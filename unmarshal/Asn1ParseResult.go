@@ -2,7 +2,7 @@ package unmarshal
 
 import (
 	"bytes"
-	"hasparse/utils"
+	"github.com/xzy256/hasparse/utils"
 )
 
 type Asn1ParseResult struct {

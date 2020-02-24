@@ -1,6 +1,6 @@
 package assign
 
-import "hasparse/unmarshal"
+import "github.com/xzy256/hasparse/unmarshal"
 
 type Asn1OctString struct {
 	TagNo int

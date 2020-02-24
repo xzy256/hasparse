@@ -2,7 +2,7 @@ package assign
 
 import (
 	"fmt"
-	"hasparse/unmarshal"
+	"github.com/xzy256/hasparse/unmarshal"
 	"log"
 	"strings"
 	"time"

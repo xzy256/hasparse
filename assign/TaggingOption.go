@@ -1,8 +1,8 @@
 package assign
 
 import (
-	"hasparse/common"
-	"hasparse/unmarshal"
+	"github.com/xzy256/hasparse/common"
+	"github.com/xzy256/hasparse/unmarshal"
 )
 
 type TaggingOption struct {

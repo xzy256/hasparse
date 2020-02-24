@@ -1,6 +1,6 @@
 package assign
 
-import "hasparse/utils"
+import "github.com/xzy256/hasparse/utils"
 
 type Aes128Provider struct {
 	Aes128Crypt *AesCrypt

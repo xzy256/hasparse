@@ -2,8 +2,8 @@ package assign
 
 import (
 	"bytes"
-	"hasparse/common"
-	"hasparse/unmarshal"
+	"github.com/xzy256/hasparse/common"
+	"github.com/xzy256/hasparse/unmarshal"
 	"log"
 )
 

@@ -1,6 +1,6 @@
 package unmarshal
 
-import "hasparse/common"
+import "github.com/xzy256/hasparse/common"
 
 type HasTag struct {
 	TagNo    int

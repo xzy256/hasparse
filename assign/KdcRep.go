@@ -3,8 +3,8 @@ package assign
 import (
 	"container/list"
 	"fmt"
-	"hasparse/unmarshal"
-	"hasparse/utils"
+	"github.com/xzy256/hasparse/unmarshal"
+	"github.com/xzy256/hasparse/utils"
 	"log"
 )
 

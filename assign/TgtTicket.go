@@ -2,10 +2,10 @@ package assign
 
 import (
 	"bytes"
+	"github.com/xzy256/hasparse/unmarshal"
+	"github.com/xzy256/hasparse/utils"
 	"gopkg.in/jcmturner/gokrb5.v7/crypto"
 	"gopkg.in/jcmturner/gokrb5.v7/crypto/rfc3962"
-	"hasparse/unmarshal"
-	"hasparse/utils"
 )
 
 func HandleKdcRep(kdcRep *KdcRep, passPhrass string) {

@@ -1,7 +1,7 @@
 package assign
 
 import (
-	"hasparse/utils"
+	"github.com/xzy256/hasparse/utils"
 	"log"
 )
 

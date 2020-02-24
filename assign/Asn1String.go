@@ -1,7 +1,7 @@
 package assign
 
 import (
-	"hasparse/unmarshal"
+	"github.com/xzy256/hasparse/unmarshal"
 )
 
 type Asn1String struct {
