@@ -32,7 +32,7 @@ func HasKdc(userName, password, authSeverAddr, port string) *KdcRep{
 	asRep.Init()
 	asRep.Decode(s1)
 	HandleKdcRep(asRep, userName+password) //"guestguestpassword0"
-	asRep.Display()
+	//asRep.Display()
 
 	return asRep
 }
