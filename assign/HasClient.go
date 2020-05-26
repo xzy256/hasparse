@@ -2,7 +2,6 @@ package assign
 
 import (
 	"bytes"
-	"errors"
 	"github.com/xzy256/hasparse/hasauth"
 	"github.com/xzy256/hasparse/unmarshal"
 	"log"
