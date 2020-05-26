@@ -2,12 +2,13 @@ package assign
 
 import (
 	"bytes"
+	"errors"
 	"github.com/xzy256/hasparse/hasauth"
 	"github.com/xzy256/hasparse/unmarshal"
 	"log"
 )
 
-func HasKdc(userName, password, authSeverAddr, port string) *KdcRep{
+func HasKdc(userName, password, authSeverAddr, port string) (*KdcRep, error) {
 
 	hasConfig := &hasauth.HasConfig{
 		HttpsPort: port,
@@ -23,7 +24,8 @@ func HasKdc(userName, password, authSeverAddr, port string) *KdcRep{
 
 	krbMessage, err := hasauth.GetKrbMessageWithBase64(response, "ConfigFile")
 	if err != nil {
-		log.Println("Response->krbMessage decode fail by base64")
+		log.Printf("Response->krbMessage decode fail by base64, err: %v", err)
+		return nil, err
 	}
 
 	buf := bytes.NewBuffer(krbMessage)
@@ -34,5 +36,5 @@ func HasKdc(userName, password, authSeverAddr, port string) *KdcRep{
 	HandleKdcRep(asRep, userName+password) //"guestguestpassword0"
 	//asRep.Display()
 
-	return asRep
+	return asRep, nil
 }
